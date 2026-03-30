@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Notes Pro</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+/* تحسين UI داخلي سريع */
+.note {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s ease-in-out;
+    background-color: white;
+}
+
+.note.High { border-left: 5px solid red; }
+.note.Medium { border-left: 5px solid orange; }
+.note.Low { border-left: 5px solid green; }
+
+.note:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+.stats { margin: 15px 0; font-weight: bold; }
+.notes { display: flex; flex-direction: column; }
+
+.edit-form { display: flex; gap: 5px; align-items: center; }
+.edit-form input[type="text"] { flex: 1; padding: 5px; }
+.edit-form select { padding: 5px; }
+.edit-form .save { background: green; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+.edit-form .save:hover { opacity: 0.8; }
+
+.delete { background: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 5px; }
+.delete:hover { opacity: 0.8; }
+
+.search { display: flex; gap: 10px; margin-bottom: 15px; }
+.search input { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+.search button { padding: 10px 15px; border-radius: 5px; cursor: pointer; background: #007BFF; color: white; border: none; }
+.search button:hover { opacity: 0.9; }
+
+.highlight { background-color: yellow; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📝 Smart Notes Pro</h1>
+
+    <!-- 🔍 Search -->
+    <form method="GET" class="search">
+        <input type="text" name="search" placeholder="Search..." value="{{ search_query }}">
+        <button>Search</button>
+    </form>
+
+    <!-- Stats -->
+    <div class="stats">
+        Total Notes: {{ total_notes }} | Total Words: {{ total_words }}
+    </div>
+
+    <!-- Add Note -->
+    <form method="POST" class="form">
+        <input type="hidden" name="action" value="add">
+        <input type="text" name="note" placeholder="Write something..." required>
+        <select name="priority">
+            <option value="High">High 🔴</option>
+            <option value="Medium">Medium 🟡</option>
+            <option value="Low">Low 🟢</option>
+        </select>
+        <button>Add</button>
+    </form>
+
+    <!-- Notes -->
+    <div class="notes">
+        {% for note in notes %}
+        <div class="note {{ note.priority }}">
+
+            <!-- ✏️ Edit Form -->
+            <form method="POST" class="edit-form">
+                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="index" value="{{ loop.index0 }}">
+                <input type="text" name="note" value="{{ note.text }}">
+                <select name="priority">
+                    <option {% if note.priority == 'High' %}selected{% endif %}>High</option>
+                    <option {% if note.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                    <option {% if note.priority == 'Low' %}selected{% endif %}>Low</option>
+                </select>
+                <button class="save">💾</button>
+            </form>
+
+            <div class="meta">
+                {{ note.date }} | Words: {{ note.word_count }}
+            </div>
+
+            <!-- Delete -->
+            <form method="POST">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="index" value="{{ loop.index0 }}">
+                <button class="delete">❌</button>
+            </form>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

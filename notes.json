@@ -1,0 +1,20 @@
+[
+    {
+        "text": "my test in 13/jun ",
+        "priority": "High",
+        "word_count": 4,
+        "date": "2026-03-30 21:47"
+    },
+    {
+        "text": "my birthday in 20/ 4 ",
+        "priority": "Medium",
+        "word_count": 5,
+        "date": "2026-03-30 21:54"
+    },
+    {
+        "text": "my sester ",
+        "priority": "Low",
+        "word_count": 2,
+        "date": "2026-03-30 21:54"
+    }
+]
